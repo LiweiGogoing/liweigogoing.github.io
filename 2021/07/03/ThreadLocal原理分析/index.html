@@ -6,15 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Archives: 2021 | Hexo</title>
+  <title>Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
+  <meta name="description" content="背景ThreadLocal常被用来当做线程隔离的容器，使用ThreadLocal能够确保每个线程保存一份数据，是一个线程安全的结构，这里主要分析一下ThreadLocal的原理和正确的使用方式，最后会介绍下可能的使用场景。 使用ThreadLocal使用起来很简单，下面是简单的使用例子： 123456private ThreadLocal&lt;CommonCmdMsg&gt; mThreadLo">
+<meta property="og:type" content="article">
 <meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/archives/2021/index.html">
+<meta property="og:url" content="http://example.com/2021/07/03/ThreadLocal%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="背景ThreadLocal常被用来当做线程隔离的容器，使用ThreadLocal能够确保每个线程保存一份数据，是一个线程安全的结构，这里主要分析一下ThreadLocal的原理和正确的使用方式，最后会介绍下可能的使用场景。 使用ThreadLocal使用起来很简单，下面是简单的使用例子： 123456private ThreadLocal&lt;CommonCmdMsg&gt; mThreadLo">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/Users/liwei86/Documents/blog/ThreadLocal/ThreadLocal-arch.png">
+<meta property="og:image" content="http://example.com/Users/liwei86/Documents/blog/ThreadLocal/ThreadLocal-ref.png">
+<meta property="article:published_time" content="2021-07-03T12:00:14.046Z">
+<meta property="article:modified_time" content="2021-07-03T12:10:06.719Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/Users/liwei86/Documents/blog/ThreadLocal/ThreadLocal-arch.png">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -150,70 +157,242 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-ThreadLocal原理分析" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>ThreadLocal常被用来当做线程隔离的容器，使用ThreadLocal能够确保每个线程保存一份数据，是一个线程安全的结构，这里主要分析一下ThreadLocal的原理和正确的使用方式，最后会介绍下可能的使用场景。</p>
+<h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><p>ThreadLocal使用起来很简单，下面是简单的使用例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> ThreadLocal&lt;CommonCmdMsg&gt; mThreadLocal = <span class="keyword">new</span> ThreadLocal&lt;CommonCmdMsg&gt;() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> CommonCmdMsg <span class="title">initialValue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> CommonCmdMsg();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>在需要使用这个CommonCmdMsg实例的地方调用:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mThreadLocal.get();</span><br></pre></td></tr></table></figure>
+
+<p>上面只是简单的声明和使用，但是在实际开发过程中，有一些需要注意的点，这个后面会介绍。</p>
+<h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>先看下ThreadLocal中使用的接口。</p>
+<h5 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h5><p>方式一</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> ThreadLocal&lt;Message&gt; sThreadLocal = <span class="keyword">new</span> ThreadLocal&lt;Message&gt;() &#123;</span><br><span class="line">     <span class="function"><span class="keyword">protected</span> Message <span class="title">initialValue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Message();</span><br><span class="line">     &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>使用静态内部类的方式直接创建ThreadLocal，并且重写线程隔离初始化的数据。</p>
+<p>方式二</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> ThreadLocal&lt;Message&gt; mThreadLocal = <span class="keyword">new</span> ThreadLocal&lt;&gt;();</span><br><span class="line">mThreadLocal.set(<span class="keyword">new</span> Message());</span><br></pre></td></tr></table></figure>
+
+<p>创建ThreadLocal和设置隔离数据分开。</p>
+<p>这里先提示下注意点：</p>
+<ul>
+<li><p>ThreadLocal 一般使用静态内部类创建</p>
+<ol>
+<li>第一种方式如果不使用static，那就是非静态内部类，引用外层类对象，可能造成内存泄露。</li>
+<li>静态内部类在多线程情况下防止多次初始化ThreadLocal，减少内存占用。</li>
+</ol>
+</li>
+<li><p>隔离数据初始化</p>
+<p>隔离的数据一定要确保每次都是使用new创建的，这样确保每个线程的数据是不同的对象，才能保证数据隔离，下面的方式就不是数据隔离了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> ThreadLocal&lt;Message&gt; mThreadLocal = <span class="keyword">new</span> ThreadLocal&lt;&gt;();</span><br><span class="line"><span class="keyword">private</span> Message mMessage = <span class="keyword">new</span> Message();</span><br><span class="line">......</span><br><span class="line">mThreadLocal.set(mMessage);</span><br></pre></td></tr></table></figure>
+
+<p>每个线程都是用相同的message，没法隔离数据。</p>
+</li>
+</ul>
+<h5 id="获取"><a href="#获取" class="headerlink" title="获取"></a>获取</h5><p>获取非常简单，通过创建的ThreadLocal对象直接获取即可。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mThreadLocal.get();</span><br></pre></td></tr></table></figure>
+
+<h5 id="移出"><a href="#移出" class="headerlink" title="移出"></a>移出</h5><p>这里先简单说下，当不再使用mThreadLocal的使用，最好调用一次remove方法，防止内存泄露。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mThreadLocal.remove()</span><br></pre></td></tr></table></figure>
+
+<h5 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h5><p>直接从获取地方看:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> T <span class="title">get</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  			<span class="comment">// 获取当前线程</span></span><br><span class="line">       Thread t = Thread.currentThread();</span><br><span class="line">  			<span class="comment">// 从当前线程种获取到一个Map的结构</span></span><br><span class="line">       ThreadLocalMap map = getMap(t);</span><br><span class="line">       <span class="keyword">if</span> (map != <span class="keyword">null</span>) &#123;</span><br><span class="line">         	<span class="comment">// 将当前ThreadLocal作为key查询</span></span><br><span class="line">           ThreadLocalMap.Entry e = map.getEntry(<span class="keyword">this</span>);</span><br><span class="line">           <span class="keyword">if</span> (e != <span class="keyword">null</span>) &#123;</span><br><span class="line">               <span class="meta">@SuppressWarnings(&quot;unchecked&quot;)</span></span><br><span class="line">               T result = (T)e.value;</span><br><span class="line">               <span class="keyword">return</span> result;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">  			<span class="comment">// 如果当前没有查询到，则会初始化并且返回初始化的结果</span></span><br><span class="line">       <span class="keyword">return</span> setInitialValue();</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面是具体获取隔离数据的过程，其中有一个ThreadLocalMap的结构，先看下getMap方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">ThreadLocalMap <span class="title">getMap</span><span class="params">(Thread t)</span> </span>&#123;</span><br><span class="line">   <span class="keyword">return</span> t.threadLocals;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>看来是每个线程中有个ThreadLocalMap的结构，所以可以做到线程隔离。下面看下具体的ThreadLocalMap的结构：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadLocalMap</span> </span>&#123;</span><br><span class="line">				<span class="comment">// 具体的key-value结构，key为ThreadLocal</span></span><br><span class="line">        <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Entry</span> <span class="keyword">extends</span> <span class="title">WeakReference</span>&lt;<span class="title">ThreadLocal</span>&lt;?&gt;&gt; </span>&#123;</span><br><span class="line">            <span class="comment">/** The value associated with this ThreadLocal. */</span></span><br><span class="line">            Object value;</span><br><span class="line">            Entry(ThreadLocal&lt;?&gt; k, Object v) &#123;</span><br><span class="line">                <span class="keyword">super</span>(k);</span><br><span class="line">                value = v;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * The initial capacity -- MUST be a power of two.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> INITIAL_CAPACITY = <span class="number">16</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 使用数组保存</span></span><br><span class="line">        <span class="keyword">private</span> Entry[] table;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>ThreadLocalMap是一个Map的结构，key为ThreadLocal，但是这里使用了弱引用，这样可以防止内存泄露的问题，但是ThreadLocal中还是存在内存泄露，后面再说。</p>
+<p>接着上面代码看，当在ThreadLocalMap中没有获取到对应ThreadLocal存的数据的时候会调用setInitialValue()方法，下面看下这个方法的实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> T <span class="title">setInitialValue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  			<span class="comment">// initialValue就是上面重写的方法</span></span><br><span class="line">        T value = initialValue();</span><br><span class="line">        Thread t = Thread.currentThread();</span><br><span class="line">  			<span class="comment">// 获取当前线程的map</span></span><br><span class="line">        ThreadLocalMap map = getMap(t);</span><br><span class="line">        <span class="keyword">if</span> (map != <span class="keyword">null</span>)</span><br><span class="line">          	<span class="comment">// 直接存储</span></span><br><span class="line">            map.set(<span class="keyword">this</span>, value);</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">          	<span class="comment">// 初始化Map并且存储</span></span><br><span class="line">            createMap(t, value);</span><br><span class="line">        <span class="keyword">return</span> value;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>通过上面分析，可以的到如下的结构图：</p>
+<p><img src="/Users/liwei86/Documents/blog/ThreadLocal/ThreadLocal-arch.png" alt="ThreadLocal-arch"></p>
+<h4 id="内存问题"><a href="#内存问题" class="headerlink" title="内存问题"></a>内存问题</h4><p>上面分析ThreadLocal结构的时候知道，ThreadLocalMap中使用Entry的结构，Entry中key为使用弱引用的ThreadLocal，value为初始化的数据。这里主要有如下几个问题：</p>
+<ol>
+<li><p>为什么使用弱引用保存ThreadLocal</p>
+<p>弱引用一般是为了防止内存泄露使用的，当一个对象只有弱引用引用，那么下次gc的时候会直接回收该对象，这里使用弱引用，主要是为了防止当外部不再使用ThreadLocal的时候，由于ThreadLocalMap引用该ThreadLocal导致的泄露问题。</p>
+<p><img src="/Users/liwei86/Documents/blog/ThreadLocal/ThreadLocal-ref.png" alt="ThreadLocal-ref"></p>
+</li>
+<li><p>是否存在内存泄露</p>
+<p>上面分析了ThreadLocalMap中保存的是Entry的数据，其中key为使用弱引用的ThreadLocal，value为具体数据，确实ThreadLocal不会造成内存泄露，但是Entry和value会造成内存泄露，所以使用ThreadLocal可能会造成内存泄露。</p>
+</li>
+<li><p>为什么不使用弱引用保存value</p>
+<p>既然会造成内存泄露，为什么Value不和key一样也使用弱引用呢？主要是因为value没有其他强应用，当put到map中，只有Entry中持有value的引用，如果value也设置为弱引用，则一次gc就会回收value，根本无法使用，Entry也是同样的道理。</p>
+</li>
+<li><p>ThreadLocal减小内存泄露的措施</p>
+<p>当添加或者删除或者扩容的时候都会检测key是否为null，如果为null，则直接移出，主要为内存泄露的防护措施。</p>
+</li>
+<li><p>ThreadLocal最佳实践</p>
+<p>上面分析了ThreadLocal为啥使用弱引用，存在的泄露问题，在日常开发过程中最好在使用完调用ThreadLocal的remove方法，手动移出，解决内存泄露问题。</p>
+</li>
+</ol>
+<h4 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h4><p>Android 里面有个非常典型的场景：Looper</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Looper</span> </span>&#123;</span><br><span class="line">   </span><br><span class="line">    <span class="meta">@UnsupportedAppUsage</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> ThreadLocal&lt;Looper&gt; sThreadLocal = <span class="keyword">new</span> ThreadLocal&lt;Looper&gt;();</span><br><span class="line">  </span><br><span class="line">  	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">prepare</span><span class="params">(<span class="keyword">boolean</span> quitAllowed)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (sThreadLocal.get() != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">&quot;Only one Looper may be created per thread&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        sThreadLocal.set(<span class="keyword">new</span> Looper(quitAllowed));</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中声明一个静态实例sThreadLocal，在prepare中设置数据。</p>
+<p>这样可以在线程的任何地方通过Looper.myLooper()获取当前的Looper实例。</p>
+<p>目前在实际开发过程中如下场景比较适合使用ThreadLocal：</p>
+<ol>
+<li><p>调用链比较长的回调接口或者全局使用的对象</p>
+<p>比如说当一个调用链非常长，不可能每个方法都传递这个对象或者回调接口，这个时候就可以通过ThreadLocal存储并且使用。</p>
+</li>
+<li><p>可以线程隔离，防止锁的争夺</p>
+<p>当有些数据在多线程的情况下会有线程同步问题，需要使用锁机制，但是使用锁会对性能造成影响，所以可以每个线程保存一份数据，互相隔离。</p>
+</li>
+</ol>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><ul>
+<li><p>ThreadLocal 工作原理</p>
+<p>ThreadLocal主要使用Thread中存在的数据结构ThreadLocalMap存储，每个线程中都有自己的ThreadLocalMap，所以能保证数据隔离，当然value需要直接new ，不能引用全局属性，不然就不存在数据隔离，ThreadLocalMap中key为ThreadLocal，value为具体的数据。</p>
+</li>
+<li><p>为什么会有内存泄露的问题</p>
+<p>ThreadLocal确实使用弱引用，但是value和Entry并没有使用弱引用，当ThreadLocal的强引用不存在的时候就会造成内存泄露，所以一般主动调用remove方法。</p>
+</li>
+<li><p>为什么常用static 修饰ThreadLocal</p>
+<ol>
+<li>防止多次创建ThreadLocal，ThreadLocal本质上市value的隔离，不用多次创建ThreadLocal。</li>
+<li>当使用static修饰后，开发人员就不会依赖ThreadLocal自身的回收，主动调用remove方法，从根本上解决泄露问题。</li>
+</ol>
+</li>
+</ul>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2021" class="archive-year">2021</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/07/03/ThreadLocal%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/" class="archive-article-date">
-  	<time datetime="2021-07-03T12:00:14.046Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-07-03</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2021/07/03/ThreadLocal%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/06/30/hello-world/" class="archive-article-date">
-  	<time datetime="2021-06-30T00:21:31.736Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-30</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2021/06/30/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Hello World</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/06/30/hello-world/">Hello World</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
+  
+
+  
 
 
           </div>
@@ -236,8 +415,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
