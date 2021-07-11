@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="TCP传输协议理解问题在学习TCP协议之前，有如下几个疑问：  TCP如何保证传输数据的完整性？ TCP为什么需要3次握手建立连接和4次挥手关闭链接？ TCP的传输过程是怎样的，窗口管理是什么机制？ 当读写主机处理数据速度不一致的时候，数据怎么办，会覆盖数据吗？  概念TCP是面向链接的，提供点对点全双工的数据传输，是可靠的的字节流传输协议，确保数据传输的完整性。 TCP协议 TCP数据是封装在I">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Keep Moving">
+<meta property="og:url" content="http://example.com/2021/07/11/TCP%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%E7%90%86%E8%A7%A3/index.html">
+<meta property="og:site_name" content="Keep Moving">
+<meta property="og:description" content="TCP传输协议理解问题在学习TCP协议之前，有如下几个疑问：  TCP如何保证传输数据的完整性？ TCP为什么需要3次握手建立连接和4次挥手关闭链接？ TCP的传输过程是怎样的，窗口管理是什么机制？ 当读写主机处理数据速度不一致的时候，数据怎么办，会覆盖数据吗？  概念TCP是面向链接的，提供点对点全双工的数据传输，是可靠的的字节流传输协议，确保数据传输的完整性。 TCP协议 TCP数据是封装在I">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2021/07/11/TCP%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%E7%90%86%E8%A7%A3/TCP%E5%8D%8F%E8%AE%AE%E6%A0%BC%E5%BC%8F.png">
+<meta property="og:image" content="http://example.com/2021/07/11/TCP%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%E7%90%86%E8%A7%A3/TCP连接过程.png">
+<meta property="og:image" content="http://example.com/2021/07/11/TCP%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%E7%90%86%E8%A7%A3/TCP断开连接.png">
+<meta property="og:image" content="http://example.com/2021/07/11/TCP%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%E7%90%86%E8%A7%A3/%E6%8A%93%E5%8C%85TCP%E4%BC%A0%E8%BE%93%E6%88%AA%E5%9B%BE.png">
+<meta property="og:image" content="http://example.com/2021/07/11/TCP%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%E7%90%86%E8%A7%A3/TCP%E4%BC%A0%E8%BE%93%E8%BF%87%E7%A8%8B.png">
+<meta property="og:image" content="http://example.com/2021/07/11/TCP%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%E7%90%86%E8%A7%A3/%E6%8A%93%E5%8C%85TCP%E4%B8%ADHTTP%E4%BC%A0%E8%BE%93.png">
+<meta property="og:image" content="http://example.com/2021/07/11/TCP%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%E7%90%86%E8%A7%A3/TCP%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6.png">
+<meta property="article:published_time" content="2021-07-11T12:55:46.985Z">
+<meta property="article:modified_time" content="2021-07-11T12:58:19.623Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/07/11/TCP%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%E7%90%86%E8%A7%A3/TCP%E5%8D%8F%E8%AE%AE%E6%A0%BC%E5%BC%8F.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://example.com/2021/07/11/TCP传输协议理解/"/>
+
+
+
+
+
+  <title> | Keep Moving</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Keep Moving</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/11/TCP%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%E7%90%86%E8%A7%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Keep Moving">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-07-11T20:55:46+08:00">
+                2021-07-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="TCP传输协议理解"><a href="#TCP传输协议理解" class="headerlink" title="TCP传输协议理解"></a>TCP传输协议理解</h3><h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><p>在学习TCP协议之前，有如下几个疑问：</p>
+<ol>
+<li>TCP如何保证传输数据的完整性？</li>
+<li>TCP为什么需要3次握手建立连接和4次挥手关闭链接？</li>
+<li>TCP的传输过程是怎样的，窗口管理是什么机制？</li>
+<li>当读写主机处理数据速度不一致的时候，数据怎么办，会覆盖数据吗？</li>
+</ol>
+<h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><p>TCP是面向链接的，提供点对点全双工的数据传输，是可靠的的字节流传输协议，确保数据传输的完整性。</p>
+<h4 id="TCP协议"><a href="#TCP协议" class="headerlink" title="TCP协议"></a>TCP协议</h4><p><img src="/2021/07/11/TCP%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%E7%90%86%E8%A7%A3/TCP%E5%8D%8F%E8%AE%AE%E6%A0%BC%E5%BC%8F.png" alt="TCP协议格式"></p>
+<p>TCP数据是封装在IP数据报中，通过源IP，目标IP，源端口，目标端口以及协议标识符确定传输通道，IP相关的数据在IP数据的首部，TCP数据分为TCP首部以及TCP数据部分，TCP数据部分是正真传输的数据，都是字节，下面重点分析下TCP首部协议：</p>
+<table>
+<thead>
+<tr>
+<th>字段名</th>
+<th>数据大小</th>
+<th>释义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>源端口</td>
+<td>2字节</td>
+<td>发送端端口号</td>
+</tr>
+<tr>
+<td>目的端口</td>
+<td>2字节</td>
+<td>接收端端口号</td>
+</tr>
+<tr>
+<td>序号</td>
+<td>4字节</td>
+<td>TCP数据传输过程中的序号</td>
+</tr>
+<tr>
+<td>确认号</td>
+<td>4字节</td>
+<td>对接收到的数据的确认序号</td>
+</tr>
+<tr>
+<td>数据偏移</td>
+<td>4bit</td>
+<td>TCP数据部分距离TCP首部的偏移量，就是TCP首部长度</td>
+</tr>
+<tr>
+<td>保留</td>
+<td>6bit</td>
+<td></td>
+</tr>
+<tr>
+<td>URG</td>
+<td>1bit</td>
+<td>紧急标志位置</td>
+</tr>
+<tr>
+<td>ACK</td>
+<td>1bit</td>
+<td>数据确认</td>
+</tr>
+<tr>
+<td>PSH</td>
+<td>1bit</td>
+<td>尽快将数据传到应用层，还不是接收缓冲区</td>
+</tr>
+<tr>
+<td>RST</td>
+<td>1bit</td>
+<td>重新连接</td>
+</tr>
+<tr>
+<td>SYN</td>
+<td>1bit</td>
+<td>请求链接</td>
+</tr>
+<tr>
+<td>FIN</td>
+<td>1bit</td>
+<td>断开链接</td>
+</tr>
+<tr>
+<td>窗口</td>
+<td>2字节</td>
+<td>表示当前主机可以接受的数据大小</td>
+</tr>
+<tr>
+<td>校验和</td>
+<td>2字节</td>
+<td>TCP数据校验值</td>
+</tr>
+<tr>
+<td>紧急指针</td>
+<td>2字节</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>一般TCP首部是20字节，可选部分可以填充，下面重点分析其中比较重要的几个字段：</p>
+<p><strong>序号</strong>：对所有传输的字节流进行编号，确保数据传输连贯性，如果当前的序号为300，携带的数据为100字节，则下一个报文段的序号为400。</p>
+<p><strong>确认号</strong>：要注意和序号的区分，TCP数据在网络传递过程中可能会出现丢失和重试等，确认号是对收到数据的确认，并且期望下一个传输数据的序号。</p>
+<p>数据传输过程中SYN和FIN会消耗一个字节的序号，ACK确认不会消耗序号。后面数据传输过程中会详细介绍序号和确认号工作流程。</p>
+<p><strong>窗口</strong>：表示报文发送端当前缓冲区剩余大小，单位字节，也就是告诉发送端还能发送多少字节的数据，当窗口为0的时候，发送端就不能发送数据了，需要定时发送探测数据来确认窗口大小。</p>
+<p><strong>校验和</strong>：网络数据传输过程中可能会出现数据传输出错的情况，通过校验和校验数据，确保数据完整性。</p>
+<p><strong>SYN</strong>：发起链接，在传输过程中消耗一个字节的序号。</p>
+<p><strong>ACK</strong>：确认收到的数据</p>
+<p><strong>FIN</strong>：断开连接，在传输过程中消耗一个字节的序号。</p>
+<h4 id="连接过程"><a href="#连接过程" class="headerlink" title="连接过程"></a>连接过程</h4><p>一般说TCP通过三次握手建立连接，具体的握手过程如下图所示：</p>
+<img src="/2021/07/11/TCP%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%E7%90%86%E8%A7%A3/TCP连接过程.png" alt="TCP连接过程" style="zoom:50%;">
+
+<p>一般建立连接之前Server端已经出去监听状态，等待客户端发送连接，下面直接从分析3次握手的过程：</p>
+<ol>
+<li>客户端发送SYN连接请求，并且告诉服务端自己的序号为x</li>
+<li>服务端接收到连接请求时，也得向客户端发送SYN连接请求，并且告诉客户端自己的序号为y，同时确认收到客户端的SYN请求，由于SYN请求消耗1个字节，所以ACK为x+1.</li>
+<li>客户端接收到服务端的连接请求后确认ACK序号，没有问题后，就建立连接，并且发送确认信息，序号为x+1，同时确认序号为y+1，也是应为收到了客户端SYN请求，消耗一个字节，所以为y + 1</li>
+<li>服务端收到确认消息后也建立连接</li>
+</ol>
+<p><strong>为什么要三次握手</strong></p>
+<p>众所周知，数据在网络传输的过程中会丢失会延迟等，如果不使用三次握手建立连接，有如下几种情况：</p>
+<ul>
+<li><p>客户端发送一次连接请求后直接连接</p>
+<p>数据传输存在延迟到达的情况，如果这个时候服务端收到了一个过期的连接请求，直接连接就会白白等待，客户端不会建立连接，直接浪费服务器资源，所以不成立。</p>
+</li>
+<li><p>服务器接收连接请求后，发送连接请求后直接连接，不需要第三步</p>
+<p>数据传输过程中存在丢失数据的情况，如果服务端发送的数据客户端没有收到，这个时候服务端和客户端都会一直在等待连接，所以必须要应答才能建立连接。</p>
+</li>
+</ul>
+<p>可能会有疑问万一客户端的ACK数据丢失了怎么办呢？</p>
+<p>服务端在一定时间内没有收到连接的ACK数据会重试，所以只要有应答确认机制就能保证连接过程，如果重试一段时间还收不到应答，就不再建立连接，因为可能是过期的连接请求数据。</p>
+<h4 id="断开过程"><a href="#断开过程" class="headerlink" title="断开过程"></a>断开过程</h4><p>一般说断开连接需要四次挥手的过程，具体流程如下所示：</p>
+<img src="/2021/07/11/TCP%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%E7%90%86%E8%A7%A3/TCP断开连接.png" alt="TCP断开连接" style="zoom:50%;">
+
+<p>断开连接四次挥手过程如下：</p>
+<ol>
+<li>客户端发送数据完成后，准备断开连接，发送FIN请求seq=x，ack=y</li>
+<li>服务端收到后发送确认数据包，FIN也会消耗一个字节的数据，所以ack=x+1</li>
+<li>当服务端数据传输完成后，发送断开连接请求seq=y</li>
+<li>客户端收到后发送断开请求确认，ack= y + 1</li>
+<li>服务端收到后就关闭连接，客户端也在2ML时间后关闭连接</li>
+</ol>
+<p><strong>为什么需要四次挥手断开连接</strong></p>
+<p>因为TCP是双通道的传输，客户端发送完数据后服务端可能还需要发送数据，所以不能直接断开，双方各自发送自己的断开请求并且只有收到确认数据报ACK后才能确认，所以总够有四次挥手的过程。</p>
+<p><strong>发送断开请求方为啥需要等待2ML时间才能关闭</strong></p>
+<p>网络数据传输过程中存在数据延迟的情况，而且最后一次发送ACK确认时服务端可能没有收到会重试，所以这个2ML是数据传输最大的延迟时间，确保能正确关闭连接。</p>
+<ol>
+<li>服务端发送的数据延迟到达，关闭数据报提前到达，直接关闭会丢失数据。</li>
+<li>客户端发送关闭链接确认数据报有可能丢失，如果直接关闭会导致服务端有一个等待和重试的过程，浪费服务端资源。</li>
+</ol>
+<h4 id="传输过程"><a href="#传输过程" class="headerlink" title="传输过程"></a>传输过程</h4><p>上面介绍TCP连接和断开的过程，本节重点介绍TCP如何传输数据，如何保证数据传输的过程。</p>
+<p>这里用WireShark抓包分析整个传输过程：</p>
+<p><img src="/2021/07/11/TCP%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%E7%90%86%E8%A7%A3/%E6%8A%93%E5%8C%85TCP%E4%BC%A0%E8%BE%93%E6%88%AA%E5%9B%BE.png" alt="抓包TCP传输截图"></p>
+<p>上述传输过程简化流程如下：</p>
+<p><img src="/2021/07/11/TCP%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%E7%90%86%E8%A7%A3/TCP%E4%BC%A0%E8%BE%93%E8%BF%87%E7%A8%8B.png" alt="TCP传输过程"></p>
+<p>1-3：TCP连接过程。</p>
+<p>4：客户端向服务端发送354字节数据</p>
+<p>5：客户端继续向服务端发送148字节数据，序号为355，抓包截图里面看到的是HTTP，这里点进去的TCP详情如下：</p>
+<p><img src="/2021/07/11/TCP%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%E7%90%86%E8%A7%A3/%E6%8A%93%E5%8C%85TCP%E4%B8%ADHTTP%E4%BC%A0%E8%BE%93.png" alt="抓包TCP中HTTP传输"></p>
+<p>6：服务端收到354字节数据，向客户端发送确认数据其中确认序号为355</p>
+<p>7：服务端收到了后续148字节数据，向客户端发送确认数据，其中确认号为355 + 148 = 503</p>
+<p><strong>数据传输注意点</strong></p>
+<ol>
+<li>上面我们看抓包分析工具中seq都是从0开始，其实这个是相对原始seq的相对值，客户端和服务端的seq都是随机生成的，不是从0开始，这样可以防止被伪造的IP发送TCP数据攻击。</li>
+<li>ACK数据是不算数据序号和确认序号的。</li>
+<li>上面只是分析了从客户端发送数据到服务端，服务端发送到客户端也是一样的，主要是理解数据序号和确认序号。</li>
+<li>数据传输过程中，存在数据丢失的情况，TCP通过重试和确认号机制保证数据准确传输。</li>
+</ol>
+<h4 id="窗口管理"><a href="#窗口管理" class="headerlink" title="窗口管理"></a>窗口管理</h4><p>窗口主要是解决发送端和接收端处理数据速度不一致，TCP发送和接收数据都是先放到数据缓冲区，如果发送数据比较快，接收端无法及时处理数据，这个时候怎么办？</p>
+<p>前面介绍TCP协议头有个字段表示Window Size，这其实是告诉发送者当前还能发送的数据大小也就是接收端缓冲区剩余空间大小，发送端最多只能发送Window Size里面数值大小的字节，当WindowSize = 0的时候，发送端就不能发送数据了，只能定期发送一个试探数据，探测Window Size的大小，而发送数据端一般都是阻塞在写数据的方法中，数据传输的过程举例如下：<img src="/2021/07/11/TCP%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%E7%90%86%E8%A7%A3/TCP%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6.png" alt="TCP流量控制"></p>
+<p>当收到600序号数据后 window size 变成0，这个时候A就会启动定时器，发送探测数据。</p>
+<h4 id="拥塞控制"><a href="#拥塞控制" class="headerlink" title="拥塞控制"></a>拥塞控制</h4><p>拥塞控制主要原则就是先初始化一个传输数据值窗口，当数据传送快的时候就加大这个窗口的值，当数据传送变慢的时候就减小这个值，所以是一个根据网络情况动态变化的窗口值。</p>
+<p><strong>慢开始</strong></p>
+<p>刚开始的时候不清楚网络情况，这个时候数据传输窗口值比较小，当能快速接收到确认数据的时候就逐渐加大传输窗口的值，慢慢探测合理的数据传输窗口值。</p>
+<p><strong>拥塞避免</strong></p>
+<p>当数据传输窗口设置到一定大小的时候，如果接收确认数据的时间慢慢到达一个阀值的时候就认为当前发送数据速度过快，网络情况比较差，降低数据传输窗口值到原来的一半。</p>
+<h4 id="问题回答"><a href="#问题回答" class="headerlink" title="问题回答"></a>问题回答</h4><ol>
+<li><p>TCP如何保证传输数据的完整性？</p>
+<p>TCP通过数据确认机制确保数据完整，接收端收到数据的时候给出当前接收到数据的序号给发送端，如果中间出现数据丢失也能通过数据重试机制保证数据传输的完整。</p>
+</li>
+<li><p>TCP为什么需要3次握手建立连接和4次挥手关闭链接？</p>
+<p>网络中传输数据存在丢失的情况，3次握手主要是确保是正常发送请求的流程，同时确认发送端和接收端的数据传输序号。4次挥手主要是由于TCP是双通道数据传输，所以不能直接关闭，根据数据确认机制，最少需要4次才能准确断开连接。</p>
+</li>
+<li><p>TCP的传输过程是怎样的，窗口管理是什么机制？</p>
+<p>TCP通过序号也确认号以及应答机制以及重传机制保证数据传输的完整性，窗口主要是为了解决发送端和接收端处理数据速度不一致设计的，当窗口为0的时候就不能发送数据了，只能定时发送探测数据探测窗口大小。</p>
+</li>
+<li><p>当读写主机处理数据速度不一致的时候，数据怎么办，会覆盖数据吗？</p>
+<p>通过窗口管理解决，不会发生数据覆盖的情况，发送端会阻塞在写数据的函数。</p>
+</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/07/03/ThreadLocal%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/" rel="next" title="">
+                <i class="fa fa-chevron-left"></i> 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%E7%90%86%E8%A7%A3"><span class="nav-number">1.</span> <span class="nav-text">TCP传输协议理解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5"><span class="nav-number">1.2.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP%E5%8D%8F%E8%AE%AE"><span class="nav-number">1.3.</span> <span class="nav-text">TCP协议</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E8%BF%87%E7%A8%8B"><span class="nav-number">1.4.</span> <span class="nav-text">连接过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%AD%E5%BC%80%E8%BF%87%E7%A8%8B"><span class="nav-number">1.5.</span> <span class="nav-text">断开过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%A0%E8%BE%93%E8%BF%87%E7%A8%8B"><span class="nav-number">1.6.</span> <span class="nav-text">传输过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86"><span class="nav-number">1.7.</span> <span class="nav-text">窗口管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6"><span class="nav-number">1.8.</span> <span class="nav-text">拥塞控制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E5%9B%9E%E7%AD%94"><span class="nav-number">1.9.</span> <span class="nav-text">问题回答</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
