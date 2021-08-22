@@ -79,13 +79,23 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="疾风亦有归途">
-<meta property="og:url" content="http://example.com/index.html">
+<meta name="description" content="操作系统概述提出问题 操作系统是怎么和硬件一起工作的 操作系统如何运行程序的 为什么内存大小有个边界，不是越大越好 不同的硬件有什么作用  空间划分根据冯·诺依曼的计算机组成结构原理，一台计算机主要有运算器，控制器，存储器，输入设备以及输出设备，其中控制器主要完成资源的分配工作，现代计算机中就是操作系统，先画出最直观的计算机工作过程如下：   所有的应用程序通过控制器访问所有硬件设备，通过控制器完">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统概述">
+<meta property="og:url" content="http://example.com/2021/08/22/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0/index.html">
 <meta property="og:site_name" content="疾风亦有归途">
+<meta property="og:description" content="操作系统概述提出问题 操作系统是怎么和硬件一起工作的 操作系统如何运行程序的 为什么内存大小有个边界，不是越大越好 不同的硬件有什么作用  空间划分根据冯·诺依曼的计算机组成结构原理，一台计算机主要有运算器，控制器，存储器，输入设备以及输出设备，其中控制器主要完成资源的分配工作，现代计算机中就是操作系统，先画出最直观的计算机工作过程如下：   所有的应用程序通过控制器访问所有硬件设备，通过控制器完">
 <meta property="og:locale">
+<meta property="og:image" content="http://example.com/2021/08/22/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0/基本工作流程图.png">
+<meta property="og:image" content="http://example.com/2021/08/22/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0/操作系统粗略结构图.png">
+<meta property="og:image" content="http://example.com/2021/08/22/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0/cpu.png">
+<meta property="og:image" content="http://example.com/2021/08/22/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0/内存.png">
+<meta property="og:image" content="http://example.com/2021/08/22/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0/磁盘.png">
+<meta property="article:published_time" content="2021-08-22T02:56:59.000Z">
+<meta property="article:modified_time" content="2021-08-22T02:59:03.721Z">
 <meta property="article:author" content="LiweiGogoing">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/08/22/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0/基本工作流程图.png">
 
 
 
@@ -115,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="http://example.com/"/>
+  <link rel="canonical" href="http://example.com/2021/08/22/操作系统概述/"/>
 
 
 
 
 
-  <title>疾风亦有归途</title>
+  <title>操作系统概述 | 疾风亦有归途</title>
   
 
 
@@ -140,8 +150,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -214,9 +223,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -246,9 +255,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/08/22/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0/" itemprop="url">操作系统概述</a></h1>
+          <h1 class="post-title" itemprop="name headline">操作系统概述</h1>
         
 
         <div class="post-meta">
@@ -298,9 +305,7 @@
       
 
       
-        
-          
-            <h3 id="操作系统概述"><a href="#操作系统概述" class="headerlink" title="操作系统概述"></a>操作系统概述</h3><h4 id="提出问题"><a href="#提出问题" class="headerlink" title="提出问题"></a>提出问题</h4><ol>
+        <h3 id="操作系统概述"><a href="#操作系统概述" class="headerlink" title="操作系统概述"></a>操作系统概述</h3><h4 id="提出问题"><a href="#提出问题" class="headerlink" title="提出问题"></a>提出问题</h4><ol>
 <li>操作系统是怎么和硬件一起工作的</li>
 <li>操作系统如何运行程序的</li>
 <li>为什么内存大小有个边界，不是越大越好</li>
@@ -386,8 +391,6 @@
 </ul>
 <h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>本文主要从宏观的角度介绍下计算机工作以及程序的运行过程，先有个感性的认识，知道计算的组成部分，各部分通过什么样的机制工作，不同的硬件有具体的工作职责。</p>
 
-          
-        
       
     </div>
     
@@ -404,159 +407,28 @@
       
 
       
-
-      
-
       
       
-        <div class="post-eof"></div>
+
       
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/22/%E6%B5%81%E7%A8%8B%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%80%83/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="疾风亦有归途">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/08/22/%E6%B5%81%E7%A8%8B%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%80%83/" itemprop="url">流程架构设计思考</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-08-22T10:47:08+08:00">
-                2021-08-22
-              </time>
+              <a href="/2021/08/22/%E6%B5%81%E7%A8%8B%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%80%83/" rel="next" title="流程架构设计思考">
+                <i class="fa fa-chevron-left"></i> 流程架构设计思考
+              </a>
             
+          </div>
 
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%9E%B6%E6%9E%84/" itemprop="url" rel="index">
-                    <span itemprop="name">架构</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          <h3 id="流程架构设计思考"><a href="#流程架构设计思考" class="headerlink" title="流程架构设计思考"></a>流程架构设计思考</h3><h4 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h4><p>架构设计是一个不断学习的过程，学习过程中思考和解决问题的方式很重要，将思考的过程记录下来，希望能形成方法论。</p>
-<h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>最近一直在思考任务流程模块的架构设计，假设需要提供一个任务流程处理的模块，这个模块是一个耗时，资源独占或资源有限，基于这样的条件如何设计整个框架和对外接口，先提出如下思考的问题：</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2021/08/22/%E6%B5%81%E7%A8%8B%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%80%83/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -566,310 +438,11 @@
   </article>
 
 
-    
-      
 
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/11/TCP%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%E7%90%86%E8%A7%A3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="疾风亦有归途">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/07/11/TCP%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%E7%90%86%E8%A7%A3/" itemprop="url">TCP传输协议理解</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-07-11T23:44:13+08:00">
-                2021-07-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index">
-                    <span itemprop="name">计算机网络</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><p>在学习TCP协议之前，有如下几个疑问：</p>
-<ol>
-<li>TCP如何保证传输数据的完整性？</li>
-<li>TCP为什么需要3次握手建立连接和4次挥手关闭链接？</li>
-<li>TCP的传输过程是怎样的，窗口管理是什么机制？</li>
-<li>当读写主机处理数据速度不一致的时候，数据怎么办，会覆盖数据吗？</li>
-</ol>
-<h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><p>TCP是面向链接的，提供点对点全双工的数据传输，是可靠的的字节流传输协议，确保数据传输的完整性。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2021/07/11/TCP%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%E7%90%86%E8%A7%A3/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
+    <div class="post-spread">
       
     </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
   </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/03/ThreadLocal%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="疾风亦有归途">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/07/03/ThreadLocal%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/" itemprop="url">ThreadLocal原理分析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-07-03T23:44:13+08:00">
-                2021-07-03
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" itemprop="url" rel="index">
-                    <span itemprop="name">多线程</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>ThreadLocal常被用来当做线程隔离的容器，使用ThreadLocal能够确保每个线程保存一份数据，是一个线程安全的结构，这里主要分析一下ThreadLocal的原理和正确的使用方式，最后会介绍下可能的使用场景。</p>
-<h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><p>ThreadLocal使用起来很简单，下面是简单的使用例子：</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2021/07/03/ThreadLocal%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-  </section>
-
-  
 
 
           </div>
@@ -877,6 +450,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -897,8 +474,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -949,6 +535,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">操作系统概述</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.</span> <span class="nav-text">提出问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A9%BA%E9%97%B4%E5%88%92%E5%88%86"><span class="nav-number">1.2.</span> <span class="nav-text">空间划分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E8%BF%87%E7%A8%8B"><span class="nav-number">1.3.</span> <span class="nav-text">运行过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A1%AC%E4%BB%B6%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.4.</span> <span class="nav-text">硬件介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#CPU"><span class="nav-number">1.4.1.</span> <span class="nav-text">CPU</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%86%85%E5%AD%98"><span class="nav-number">1.4.2.</span> <span class="nav-text">内存</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%A3%81%E7%9B%98"><span class="nav-number">1.4.3.</span> <span class="nav-text">磁盘</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BD%91%E5%8D%A1"><span class="nav-number">1.4.4.</span> <span class="nav-text">网卡</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.5.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -1089,6 +691,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
