@@ -79,11 +79,15 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="疾风亦有归途">
-<meta property="og:url" content="http://example.com/index.html">
+<meta name="description" content="流程架构设计思考说明架构设计是一个不断学习的过程，学习过程中思考和解决问题的方式很重要，将思考的过程记录下来，希望能形成方法论。 背景最近一直在思考任务流程模块的架构设计，假设需要提供一个任务流程处理的模块，这个模块是一个耗时，资源独占或资源有限，基于这样的条件如何设计整个框架和对外接口，先提出如下思考的问题：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="流程架构设计思考">
+<meta property="og:url" content="http://example.com/2021/08/22/%E6%B5%81%E7%A8%8B%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%80%83/index.html">
 <meta property="og:site_name" content="疾风亦有归途">
+<meta property="og:description" content="流程架构设计思考说明架构设计是一个不断学习的过程，学习过程中思考和解决问题的方式很重要，将思考的过程记录下来，希望能形成方法论。 背景最近一直在思考任务流程模块的架构设计，假设需要提供一个任务流程处理的模块，这个模块是一个耗时，资源独占或资源有限，基于这样的条件如何设计整个框架和对外接口，先提出如下思考的问题：">
 <meta property="og:locale">
+<meta property="article:published_time" content="2021-08-22T02:47:08.000Z">
+<meta property="article:modified_time" content="2021-08-22T02:51:41.716Z">
 <meta property="article:author" content="LiweiGogoing">
 <meta name="twitter:card" content="summary">
 
@@ -115,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://example.com/"/>
+  <link rel="canonical" href="http://example.com/2021/08/22/流程架构设计思考/"/>
 
 
 
 
 
-  <title>疾风亦有归途</title>
+  <title>流程架构设计思考 | 疾风亦有归途</title>
   
 
 
@@ -140,8 +144,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -214,9 +217,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -246,9 +249,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/08/22/%E6%B5%81%E7%A8%8B%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%80%83/" itemprop="url">流程架构设计思考</a></h1>
+          <h1 class="post-title" itemprop="name headline">流程架构设计思考</h1>
         
 
         <div class="post-meta">
@@ -320,170 +321,79 @@
       
 
       
-        
-          <h3 id="流程架构设计思考"><a href="#流程架构设计思考" class="headerlink" title="流程架构设计思考"></a>流程架构设计思考</h3><h4 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h4><p>架构设计是一个不断学习的过程，学习过程中思考和解决问题的方式很重要，将思考的过程记录下来，希望能形成方法论。</p>
+        <h3 id="流程架构设计思考"><a href="#流程架构设计思考" class="headerlink" title="流程架构设计思考"></a>流程架构设计思考</h3><h4 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h4><p>架构设计是一个不断学习的过程，学习过程中思考和解决问题的方式很重要，将思考的过程记录下来，希望能形成方法论。</p>
 <h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>最近一直在思考任务流程模块的架构设计，假设需要提供一个任务流程处理的模块，这个模块是一个耗时，资源独占或资源有限，基于这样的条件如何设计整个框架和对外接口，先提出如下思考的问题：</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2021/08/22/%E6%B5%81%E7%A8%8B%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%80%83/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
+<span id="more"></span>
 
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/11/TCP%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%E7%90%86%E8%A7%A3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="疾风亦有归途">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/07/11/TCP%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%E7%90%86%E8%A7%A3/" itemprop="url">TCP传输协议理解</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-07-11T23:44:13+08:00">
-                2021-07-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index">
-                    <span itemprop="name">计算机网络</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><p>在学习TCP协议之前，有如下几个疑问：</p>
+<ul>
+<li><p>接口设计</p>
+<p>整个模块对外的接口如何设计，异步任务如何设计回调的结果，包括错误码设计。</p>
+</li>
+<li><p>异步任务回调</p>
+<p>异步任务的回调如何设计，会不会有取消流程的接口，如何保证不会有内存泄露的情况发生。</p>
+</li>
+<li><p>有限资源分配</p>
+<p>当资源有限或者资源独占的时候如何设计流程，包括回调和接口，比如会不会有取消接口。</p>
+</li>
+<li><p>任务调度设计</p>
+<p>当资源有限时，如何设计调度，具体案例具体分析。</p>
+</li>
+</ul>
+<h4 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h4><p>下面是主要的思考过程，主要是上面提出的问题的思考。</p>
+<h5 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h5><p>接口设计这块其实主要是流程启动接口和流程结束接口的设计，一般异步任务如网络异步请求的时候都会有异步接口加回调还有取消任务的接口。</p>
+<ul>
+<li><p>异步任务是否需要取消任务的接口</p>
+<p>异步任务都是有回调接口，这就很容易造成内存泄露，一般为了避免内存泄露会有如下集中处理方式：</p>
 <ol>
-<li>TCP如何保证传输数据的完整性？</li>
-<li>TCP为什么需要3次握手建立连接和4次挥手关闭链接？</li>
-<li>TCP的传输过程是怎样的，窗口管理是什么机制？</li>
-<li>当读写主机处理数据速度不一致的时候，数据怎么办，会覆盖数据吗？</li>
+<li>模块内使用弱引用保存传入的回调，防止内存泄露。</li>
+<li>模块调用方自己将回调设计为弱引用，防止内存泄露。</li>
+<li>引入cancel任务取消机制，调用方主动调用，模块内去除回调的引用，防止内存泄露。</li>
 </ol>
-<h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><p>TCP是面向链接的，提供点对点全双工的数据传输，是可靠的的字节流传输协议，确保数据传输的完整性。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2021/07/11/TCP%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%E7%90%86%E8%A7%A3/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
+<p>一般为了让调用方使用方便最好使用1和3结合的方式解决内存泄露的问题，在引入cancel的时候也要使用1，防止有些调用方没有正常处理导致的内存泄露问题。</p>
+</li>
+<li><p>如果有取消接口，如果处理正在流程中任务</p>
+<ol>
+<li>取消接口就意味着任务有取消策略，一般这种服务级别的任务，通过设置任务标记，在任务流程中的一些关键节点，尤其是消耗资源和耗时比较久的接口调用钱都需要检查下任务标记。</li>
+<li>对于一些独占资源的任务，需要确切的在释放资源后才能回调，如果任务调用没有及时性，可以考虑放到任务队列中，确保独占资源能正常使用和释放。</li>
+<li>对于一些及时性独占任务且有界面展示，在任务处理流程中再加入新的任务，直接返回正在流程中的回调。</li>
+<li>对于一些后台的独占性任务，可以放到任务队列中，串行执行，可以设置优先级等。</li>
+</ol>
+</li>
+<li><p>任务模块中如何处理回调，防止内存泄露问题</p>
+<ol>
+<li>如果是线程级别的，考虑使用ThreadLocal存放弱引用CallBack，防止内存泄露和到处传递回调。</li>
+<li>如果是服务级别的，如果流程不是很长，直接传入弱引用CallBack，如果流程很长则考虑统一存放，分配任务ID，通过ID映射。</li>
+</ol>
+</li>
+</ul>
+<h5 id="回调"><a href="#回调" class="headerlink" title="回调"></a>回调</h5><p>在异步任务中要处理好回调，回调主要是防止内存泄露。当对外提供耗时任务接口时，为了防止内存泄露，主要有如下3种规避方式</p>
+<ol>
+<li>外部使用弱引用处理传入的回调</li>
+<li>模块内部使用弱引用保存会调</li>
+<li>模块内部提供任务cancel的接口，主动释放回调</li>
+</ol>
+<p>一般从易用性和兼容性的角度来说，模块内需要兼具2和3的处理，这样方便外边调用以及如果外部调用方没有处理的情况下规避问题。</p>
+<h5 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h5><p>一般模块内的资源是有限的，有的可能还是独占性资源，这个时候，流程设计就很重要了，分情况讨论：</p>
+<ul>
+<li><p>资源有限</p>
+<p>当资源是有限的情况下也就意味着能够使用并发完成任务，这种情况下使用任务队列+线程池的方式</p>
+</li>
+<li><p>资源独占</p>
+<p>资源独占的情况下意味着同一时刻只能完成一个任务，这个时候考虑如下方式：</p>
+<ol>
+<li>工作线程 + 任务队列</li>
+<li>当有任务正在执行中，可以直接拒绝添加的新任务，并且返回拒绝的错误码</li>
+</ol>
+<p>具体情况要具体讨论，比如和界面有直接相关的可以考虑方式2，当和界面无关，可以有足够的耐心等待任务可以使用方式1。</p>
+</li>
+</ul>
+<h5 id="调度"><a href="#调度" class="headerlink" title="调度"></a>调度</h5><p>调度主要考虑的是任务的优先级，这个一般都不是资源独占类型的任务。一般在开发调度功能的时候需要考虑如下问题：</p>
+<ol>
+<li>任务是否需要频繁执行，这种情况下资源调度如何确保任务能够被执行到</li>
+<li>任务调度算法，主要考虑优先级调度还是顺序调度，还是说处理特殊任务，比如Android中Handler机制中的同步消息屏障。</li>
+</ol>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>上面都是从稍微比较细一点的角度对流程架构设计的思考，架构是持续不断演进的，可能后续还有新的思考。</p>
+
       
     </div>
     
@@ -500,159 +410,28 @@
       
 
       
-
-      
-
       
       
-        <div class="post-eof"></div>
+
       
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/03/ThreadLocal%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="疾风亦有归途">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/07/03/ThreadLocal%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/" itemprop="url">ThreadLocal原理分析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-07-03T23:44:13+08:00">
-                2021-07-03
-              </time>
+              <a href="/2021/07/11/TCP%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE%E7%90%86%E8%A7%A3/" rel="next" title="TCP传输协议理解">
+                <i class="fa fa-chevron-left"></i> TCP传输协议理解
+              </a>
             
+          </div>
 
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" itemprop="url" rel="index">
-                    <span itemprop="name">多线程</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          <h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>ThreadLocal常被用来当做线程隔离的容器，使用ThreadLocal能够确保每个线程保存一份数据，是一个线程安全的结构，这里主要分析一下ThreadLocal的原理和正确的使用方式，最后会介绍下可能的使用场景。</p>
-<h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><p>ThreadLocal使用起来很简单，下面是简单的使用例子：</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2021/07/03/ThreadLocal%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -662,10 +441,11 @@
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -673,6 +453,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -693,8 +477,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -745,6 +538,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%80%83"><span class="nav-number">1.</span> <span class="nav-text">流程架构设计思考</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%B4%E6%98%8E"><span class="nav-number">1.1.</span> <span class="nav-text">说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.2.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%9D%E8%80%83"><span class="nav-number">1.3.</span> <span class="nav-text">思考</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.3.1.</span> <span class="nav-text">接口</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9B%9E%E8%B0%83"><span class="nav-number">1.3.2.</span> <span class="nav-text">回调</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%B5%84%E6%BA%90"><span class="nav-number">1.3.3.</span> <span class="nav-text">资源</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%B0%83%E5%BA%A6"><span class="nav-number">1.3.4.</span> <span class="nav-text">调度</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.4.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -885,6 +694,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
